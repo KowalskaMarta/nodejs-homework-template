@@ -23,6 +23,10 @@ const user = new Schema({
     type: String,
     default: null,
   },
+  avatarURL: {
+    type: String,
+    required: true,
+  },
 });
 
 export const User = mongoose.model("user", user);
