@@ -1,6 +1,8 @@
 import { User, registerSchema } from "#schemas/users.js";
 
 import bcrypt from "bcryptjs";
+import gravatar from 'gravatar'
+
 
 export async function registerUser(req, res, next) {
   const { email, password } = req.body;
@@ -29,7 +31,8 @@ export async function registerUser(req, res, next) {
 
   try {
     const hashPasswd = await bcrypt.hash(password, 10);
-    const result = await User.create({ email, password: hashPasswd });
+    const avatarURL = gravatar.url(email)
+    const result = await User.create({ email, password: hashPasswd, avatarURL, });
 
     res.status(201).json({
       status: "success",
@@ -38,6 +41,7 @@ export async function registerUser(req, res, next) {
         user: {
           email: result.email,
           subscription: result.subscription,
+          avatarURL: result.avatarURL,
         },
       },
     });
