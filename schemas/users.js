@@ -27,6 +27,14 @@ const user = new Schema({
     type: String,
     required: true,
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, "Verify token is required"],
+  },
 });
 
 export const User = mongoose.model("user", user);
@@ -41,4 +49,9 @@ export const loginSchema = Joi.object({
     "string.pattern.base": "Email format is: example@example.com",
   }),
   password: Joi.string().min(6).required(),
+});
+export const userEmailResendVerificationSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    "string.pattern.base": "Email format is: example@example.com",
+  }),
 });

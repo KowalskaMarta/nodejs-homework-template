@@ -1,8 +1,9 @@
 import { User, registerSchema } from "#schemas/users.js";
 
 import bcrypt from "bcryptjs";
-import gravatar from 'gravatar'
-
+import gravatar from "gravatar";
+import { nanoid } from 'nanoid'
+import { sendEmail } from '#utils/nodemailer.js'
 
 export async function registerUser(req, res, next) {
   const { email, password } = req.body;
@@ -31,8 +32,27 @@ export async function registerUser(req, res, next) {
 
   try {
     const hashPasswd = await bcrypt.hash(password, 10);
-    const avatarURL = gravatar.url(email)
-    const result = await User.create({ email, password: hashPasswd, avatarURL, });
+    const avatarURL = gravatar.url(email);
+
+    const verificationToken = nanoid();
+
+    const isEmailSend = await sendEmail({ email, verificationToken });
+
+    if (!isEmailSend) {
+      return res.status(500).json({
+        status: "error",
+        code: 500,
+        message: "Server error",
+      });
+    }
+
+    const result = await User.create({
+      email,
+      password: hashPasswd,
+      avatarURL,
+      verify: false,
+      verificationToken,
+    });
 
     res.status(201).json({
       status: "success",

@@ -57,7 +57,5 @@ res.json({
 } catch (error) {
     console.log(error)
     next(error)
-    return res.status(500).json({message: 'Server error'})
 }
-
 }
