@@ -24,6 +24,5 @@ export async function updateContacts(req, res, next) {
       : res.status(404).json({ message: "Not found" });
   } catch (error) {
     next(error);
-    return res.status(500).json({ message: "Server error" });
   }
 }

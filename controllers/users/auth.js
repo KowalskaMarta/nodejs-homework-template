@@ -13,6 +13,6 @@ export const auth = (req, res, next) => {
       })
     }
     req.user = user
-    return next()
+    next()
   })(req, res, next)
 }
